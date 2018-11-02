@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+body{
+  background-color:#E6E6FA;
+}
+.main{
+  width:800px;
+  height:800px;
+  margin:auto;
+  margin-top:100px;
+}
+h1{
+  text-align:center;
+  font-size:60px;
+}
+#search
+{
+  width:600px;
+  margin-left:100px;
+  height:50px;
+  border-radius:50px;
+  font-size:20px;
+}
+.button_box
+{
+height:30px;
+width:150px;
+margin-left:160px;
+margin-top:30px;
+border-radius:5px;
+background:Beige;
+font-size:20px;
+}
+.hidden
+{
+  display:none;
+}
+.ResultContent{
+width:700px;
+}
+.result_box
+{
+  height:30px;
+
+
+}
+#search2
+{
+  width:500px;
+  height:30px;
+  border-radius:5px;
+  font-size:10px;
+    margin-left:50px;
+}
+#button3
+{
+  height:30px;
+  margin-left:10px;
+  width:100px;
+  border-radius:5px;
+}
+a
+{
+  text-decoration：none;
+  font-size:20px;
+}
+a:hover
+{
+  color:red;
+}
+.result-snippet
+{
+  font-size:15px;
+    word-wrap:break-word;
+    color:grey;
+}
+.result-list{
+  margin:10px;
+  margin-left:50px;
+  padding:10px;
+}
+.ad{
+  position:absolute;
+  top:50px;
+  left:1000px;
+  height:500px;
+  width:300px;
+  border:1px solid black;
+  text-align:center;
+}
+</style>
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+  <div class="main" >
+    <div class="header"><h1>Wikipedia Search</h1></div>
+    <div class="search_box">
+      <input type="search" id="search" placeholder="Search Wekipedia">
+    </div>
+    <div class="button_list">
+      <button class="button_box" id="button1" onClick="javascript:window.location.href='https://en.wikipedia.org/wiki/Special:Random'">Random</button>
+      <button class="button_box" id="button1" onClick="SearchResult()">Search</button>
+    </div>
+  </div>
+  <div class="result hidden">
+    <div class="reslut-box">
+    <input type="search" id="search2" placeholder="Search Wekipedia">
+      <input type="button" id="button3" value="Search" onClick="SearchResult2()">
+      </div>
+    <div style="margin-top:5px;width:100%;border:1px solid grey;box-shadow:1px 1px 5px grey">
+      </div>
+      <div class="ResultContent">
+      </div>
+      <div class="ad">广告位招租
+        </div>
+  </div>
+</body>
+<script>
+function SearchResult()
+{
+    $(".main").addClass("hidden");
+    $(".result").removeClass('hidden');
+    var words=$("#search").val();
+    $('#search2').val(words);
+    $.ajax({
+      url:"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+words+"&prop=info&inprop=url&utf8=&format=json",
+      dataType:"JSONP",
+      success:function(data)
+      {
+        console.log(data)
+        var search=data.query.search;
+        for(var i=0;i<10;i++)
+        {
+          var title=data.query.search[i].title;
+          var title2=title.replace(/ /g,"_");
+          var url="https://en.wikipedia.org/wiki/"+title2;
+          var snippet=data.query.search[i].snippet;
+          $(".ResultContent").append("<div class='result-list Result-"+i+"'><a href="+url+">"+title+"</a><br><div class='result-snippet snippet-" + i + "'></div></div>")
+          $(".snippet-"+i).html(snippet);
+        }
+      }
+     })
+}
+function SearchResult2()
+{
+  $(".ResultContent").empty();
+  var words=$("#search2").val();
+  $('#search2').val(words);
+  $.ajax({
+    url:"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+words+"&prop=info&inprop=url&utf8=&format=json",
+    dataType:"JSONP",
+    success:function(data)
+    {
+      console.log(data)
+      var search=data.query.search;
+      for(var i=0;i<10;i++)
+      {
+        var title=data.query.search[i].title;
+        var title2=title.replace(/ /g,"_");
+        var url="https://en.wikipedia.org/wiki/"+title2;
+        var snippet=data.query.search[i].snippet;
+        $(".ResultContent").append("<div class='result-list Result-"+i+"'><a href="+url+">"+title+"</a><br><div class='result-snippet snippet-" + i + "'></div></div>")
+        $(".snippet-"+i).html(snippet);
+      }
+    }
+   })
+}
+</script>
+</html>
